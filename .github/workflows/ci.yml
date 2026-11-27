@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: reasonr
+          POSTGRES_PASSWORD: reasonr
+          POSTGRES_DB: reasonr
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U reasonr"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      REASONR_TEST_POSTGRES: postgres://reasonr:reasonr@localhost:5432/reasonr
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: go.sum
+      - name: gofmt
+        run: make fmt-check
+      - name: vet
+        run: make vet
+      - name: staticcheck
+        run: |
+          go install honnef.co/go/tools/cmd/staticcheck@2026.2.2
+          PATH="$(go env GOPATH)/bin:$PATH" make lint
+      - name: test
+        run: make test-race
