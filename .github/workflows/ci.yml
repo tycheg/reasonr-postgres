@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17
+        image: postgres:19
         env:
           POSTGRES_USER: reasonr
           POSTGRES_PASSWORD: reasonr
@@ -25,10 +25,10 @@ jobs:
     env:
       REASONR_TEST_POSTGRES: postgres://reasonr:reasonr@localhost:5432/reasonr
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
-          go-version: stable
+          go-version: "1.27.4"
           cache-dependency-path: go.sum
       - name: gofmt
         run: make fmt-check

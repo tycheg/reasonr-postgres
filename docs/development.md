@@ -1,7 +1,7 @@
 # Development and tests
 
 ```bash
-docker run -d --name reasonr-pg -e POSTGRES_USER=reasonr -e POSTGRES_PASSWORD=reasonr -e POSTGRES_DB=reasonr -p 55432:5432 postgres:17
+docker run -d --name reasonr-pg -e POSTGRES_USER=reasonr -e POSTGRES_PASSWORD=reasonr -e POSTGRES_DB=reasonr -p 55432:5432 postgres:19
 REASONR_TEST_POSTGRES=postgres://reasonr:reasonr@localhost:55432/reasonr go test ./...
 ```
 
